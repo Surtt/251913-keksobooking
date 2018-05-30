@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Alexander Sergeev](https://up.htmlacademy.ru/javascript/14/user/251913).
-* Наставник: `Неизвестно`.
+* Наставник: [Олег Плотников](https://htmlacademy.ru/profile/id230042).
 
 ---
 
