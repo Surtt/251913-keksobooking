@@ -22,13 +22,13 @@ var generateRandomFeatures = function () {
   return features.slice(0, randomLength);
 };
 
-var photosAvatar = [1, 2, 3, 4, 5, 6, 7, 8];
+// var photosAvatar = [1, 2, 3, 4, 5, 6, 7, 8];
 
 
 var generateRandomData = function (id) {
   return {
     'author': {
-      'avatar': 'img/avatars/user0' + photosAvatar[i] + '.png'
+      'avatar': 'img/avatars/user0' + (id + 1) + '.png'
     },
 
     'offer': {
@@ -61,14 +61,13 @@ for (var i = 0; i < 8; i++) {
 var showMap = document.querySelector('.map');
 showMap.classList.remove('map--faded');
 
-// var mapCard = document.querySelector('template').content.querySelector('.map__card');
-
-// var listMapCard = document.querySelector('.map__pins');
 var templateContent = document.querySelector('template').content;
 var pinTemplate = templateContent.querySelector('.map__pin');
 
+// Функция создания метки
+
 function createPin(data) {
-  // TODO! заменить querySelector('template') -> querySelector('button')
+
   var copy = pinTemplate.cloneNode(true);
   copy.style.left = data.location.x + 'px';
   copy.style.top = data.location.y + 'px';
@@ -78,12 +77,17 @@ function createPin(data) {
 }
 
 var mapPins = document.querySelector('.map__pins');
+var mapFiltersContainer = document.querySelector('.map__filters-container');
+var getPins = function () {
+  for (var j = 0; j < 8; j++) {
+    var data = ads[j];
+    var element = createPin(data);
+    mapPins.appendChild(element);
+  }
+  var map = document.querySelector('section.map');
 
-for (var j = 0; j < 8; j++) {
-  var data = ads[j];
-  var element = createPin(data);
-  mapPins.appendChild(element);
-}
+  map.insertBefore(createCard(data), mapFiltersContainer);
+};
 
 var Template = document.querySelector('template');
 var carTemplate = Template.content.querySelector('.map__card');
@@ -92,8 +96,10 @@ var translateFlatType = function (typeEn) {
   return typeTranslates[typeEn];
 };
 
+// Функция вывода карточки
+
 var createCard = function (card) {
-// TODO! заменить querySelector('template') -> querySelector('.map__card')
+
   var cardElement = carTemplate.cloneNode(true);
 
   cardElement.querySelector('.popup__title').textContent = card.offer.title;
@@ -115,13 +121,75 @@ var createCard = function (card) {
 
 var fragmentCards = document.createDocumentFragment();
 
-// fragmentCards.appendChild(createCard(data));
-
 showMap.appendChild(fragmentCards);
 
-// На основе первого по порядку элемента из сгенерированного массива и шаблона .map__card создайте DOM-элемент объявления, заполните его данными из объекта и вставьте полученный DOM-элемент в блок .map перед блоком.map__filters-container:
-// var advertsTemplate = document.querySelector('template').content.querySelector('article.map__card');
-// var advertElement = advertsTemplate.cloneNode(true);
-var map = document.querySelector('section.map');
-var mapFiltersContainer = document.querySelector('.map__filters-container');
-map.insertBefore(createCard(data), mapFiltersContainer);
+
+// Возвращаем карту в исходное состояние, затемняем ее
+document.querySelector('.map').classList.add('map--faded');
+
+
+// Скрываем все метки на карте
+var getHiddenPins = function () {
+  var buttonMapPin = document.querySelectorAll('button.map__pin');
+  for (var l = 0; l < buttonMapPin.length; l++) {
+    buttonMapPin[l].style.display = 'none';
+  }
+};
+
+getHiddenPins();
+
+// Активация главной метки
+var mapPinMain = document.querySelector('button.map__pin--main');
+mapPinMain.style.display = '';
+
+var adFormElement = document.querySelectorAll('.ad-form__element');
+
+// Все поля формы делаем неактивными
+var getDisabledFields = function () {
+  for (var m = 0; m < adFormElement.length; m++) {
+    adFormElement[m].setAttribute('disabled', '');
+  }
+};
+
+getDisabledFields();
+
+// Активация страницы
+var enterKeyCode = 13;
+var offerHandle = document.querySelector('.map__pin--main');
+var form = document.querySelector('.ad-form');
+
+var enableForm = function () {
+  form.classList.remove('ad-form--disabled');
+  for (var n = 0; n < adFormElement.length; n++) {
+    adFormElement[n].removeAttribute('disabled');
+  }
+};
+
+var onMainPinClick = function () {
+  showMap.classList.remove('map--faded');
+  enableForm();
+  getPins();
+};
+
+offerHandle.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === enterKeyCode) {
+    onMainPinClick();
+  }
+});
+
+offerHandle.addEventListener('mouseup', function () {
+  onMainPinClick();
+
+  // Скрываем объявление показывающееся при загрузке
+  var articlePopup = document.querySelector('article.map__card');
+  articlePopup.setAttribute('hidden', '');
+
+});
+
+
+// Автоматическое заполнение поле адреса в форме
+var addressInput = document.getElementById('address');
+var xPosition = offerHandle.offsetLeft;
+var yPosition = offerHandle.offsetTop;
+
+addressInput.value = xPosition + ', ' + yPosition;
