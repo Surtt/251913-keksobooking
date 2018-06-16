@@ -24,7 +24,6 @@ var generateRandomFeatures = function () {
 
 // var photosAvatar = [1, 2, 3, 4, 5, 6, 7, 8];
 
-
 var generateRandomData = function (id) {
   return {
     'author': {
@@ -57,7 +56,6 @@ for (var i = 0; i < 8; i++) {
   ads[i] = generateRandomData(i);
 }
 
-
 var showMap = document.querySelector('.map');
 showMap.classList.remove('map--faded');
 
@@ -76,21 +74,102 @@ function createPin(data) {
   return copy;
 }
 
-var mapPins = document.querySelector('.map__pins');
+var mapPinsContainer = document.querySelector('.map__pins');
 var mapFiltersContainer = document.querySelector('.map__filters-container');
-var getPins = function () {
+
+// var onPinClick = function (e) {
+//   var pinIndex = mapPinsElements.findIndex(function (element) {
+//     return element === e.currentTarget;
+//   });
+//   if (pinIndex !== -1) {
+//     showCard(pinIndex);
+//   }
+// };
+
+var onMapPinsContainerClick = function (e) {
+  // надо понять мы по кнопке кликнули или нет
+  // console.log('onMapPinsContainerClick', e.target);
+  var button = tryGetButtonAsTarget(e.target); // возвращает либо кнопку, либо ничего
+  if (button) {
+    // точно так же находим индекс
+    var pinIndex = mapPinsElements.findIndex(function (element) {
+      return element === button;
+    });
+    if (pinIndex !== -1) {
+      showCard(pinIndex);
+    }
+  }
+};
+
+var tryGetButtonAsTarget = function (target) {
+  // тут нам надо убедиться что мы кликнули по кнопке
+  // var buttons = document.querySelectorAll('.map__pins button[type="button"]');
+  // var buttonsImg = document.querySelectorAll('.map__pins button[type="button"]>img');
+  if (target.tagName === 'BUTTON') {
+    return target;
+    // todo еще надо учесть картинку и исключить pin_main
+  } else {
+    return undefined;
+  }
+};
+
+var ENTER_KEYCODE = 13;
+// var ESC_KEYCODE = 27;
+
+// var cardClose = document.querySelector('.popup__close');
+
+// var closeCard = function () {
+//   document.classList.add('hidden');
+// };
+
+// cardClose.addEventListener('click', closeCard);
+// cardClose.addEventListener('keydown', function (evt) {
+//   if (evt.keyCode === ENTER_KEYCODE) {
+//     closeCard();
+//   }
+//   if (evt.keyCode === ESC_KEYCODE) {
+//     closeCard();
+//   }
+// });
+
+
+// нам этот список нужен только для определения индекса текущего элемента, по которому мы кликнули (чтобы сопоставить пин и его инфу)
+var mapPinsElements = [];
+
+// var createPins = function () {
+//   for (var j = 0; j < 8; j++) {
+//     var data = ads[j];
+//     var pinElement = createPin(data);
+//     mapPinsElements.push(pinElement);
+//     pinElement.addEventListener('click', onPinClick); // на каждый элемент навешиваем обработчик
+//     mapPinsContainer.appendChild(pinElement);
+//   }
+// };
+
+// вариант с делегированием: разница в том что обраотчик клика добавится только 1 раз, а не 8
+var createPins = function () {
   for (var j = 0; j < 8; j++) {
     var data = ads[j];
-    var element = createPin(data);
-    mapPins.appendChild(element);
+    var pinElement = createPin(data);
+    mapPinsElements.push(pinElement);
+    mapPinsContainer.appendChild(pinElement);
   }
-  var map = document.querySelector('section.map');
+  mapPinsContainer.addEventListener('click', onMapPinsContainerClick); // навешиваем обработчик только на контейнер, один раз
+};
 
+var showCard = function (index) {
+  // todo удалить предыдущую карточку
+  var mapCard = document.querySelector('.map__card');
+  if (mapCard) {
+    mapCard.parentNode.removeChild(mapCard);
+  }
+  var data = ads[index];
+  var map = document.querySelector('section.map');
   map.insertBefore(createCard(data), mapFiltersContainer);
 };
 
-var Template = document.querySelector('template');
-var carTemplate = Template.content.querySelector('.map__card');
+var template = document.querySelector('template');
+var carTemplate = template.content.querySelector('.map__card');
 
 var translateFlatType = function (typeEn) {
   return typeTranslates[typeEn];
@@ -123,39 +202,38 @@ var fragmentCards = document.createDocumentFragment();
 
 showMap.appendChild(fragmentCards);
 
-
 // Возвращаем карту в исходное состояние, затемняем ее
 document.querySelector('.map').classList.add('map--faded');
 
-
-// Скрываем все метки на карте
-var getHiddenPins = function () {
-  var buttonMapPin = document.querySelectorAll('button.map__pin');
-  for (var l = 0; l < buttonMapPin.length; l++) {
-    buttonMapPin[l].style.display = 'none';
-  }
-};
-
-getHiddenPins();
-
-// Активация главной метки
-var mapPinMain = document.querySelector('button.map__pin--main');
-mapPinMain.style.display = '';
-
-var adFormElement = document.querySelectorAll('.ad-form__element');
+var adFormElement = document.querySelectorAll('.ad-form fieldset');
 
 // Все поля формы делаем неактивными
-var getDisabledFields = function () {
+var getDisabledFields = function (input) {
   for (var m = 0; m < adFormElement.length; m++) {
-    adFormElement[m].setAttribute('disabled', '');
+    adFormElement[m].disabled = input;
   }
 };
 
-getDisabledFields();
+getDisabledFields(true);
+
+var MAIN_PIN_X = 32;
+var MAIN_PIN_Y = 84;
+var mainPinElement = document.querySelector('.map__pin--main');
+var mapMainPinX = mainPinElement.style.left;
+var mapMainPinY = mainPinElement.style.top;
+
+// Определение координат mainPin
+var getMainPinXY = function (pos, gap) {
+  return Number.parseInt(pos.split('px', 1), 10) + gap;
+};
+
+// Добавление в инпут формы
+var inputAddress = document.querySelector('#address');
+inputAddress.value = getMainPinXY(mapMainPinX, MAIN_PIN_X) + ', ' + getMainPinXY(mapMainPinY, MAIN_PIN_Y);
 
 // Активация страницы
-var enterKeyCode = 13;
-var offerHandle = document.querySelector('.map__pin--main');
+
+
 var form = document.querySelector('.ad-form');
 
 var enableForm = function () {
@@ -168,28 +246,24 @@ var enableForm = function () {
 var onMainPinClick = function () {
   showMap.classList.remove('map--faded');
   enableForm();
-  getPins();
+  createPins();
 };
 
-offerHandle.addEventListener('keydown', function (evt) {
-  if (evt.keyCode === enterKeyCode) {
+mainPinElement.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === ENTER_KEYCODE) {
     onMainPinClick();
   }
 });
 
-offerHandle.addEventListener('mouseup', function () {
+mainPinElement.addEventListener('mouseup', function () {
   onMainPinClick();
-
-  // Скрываем объявление показывающееся при загрузке
-  var articlePopup = document.querySelector('article.map__card');
-  articlePopup.setAttribute('hidden', '');
-
 });
 
+var cardClose = document.querySelector('.popup__close');
+var closeCard = function () {
+  document.classList.add('hidden');
+};
 
-// Автоматическое заполнение поле адреса в форме
-var addressInput = document.getElementById('address');
-var xPosition = offerHandle.offsetLeft;
-var yPosition = offerHandle.offsetTop;
-
-addressInput.value = xPosition + ', ' + yPosition;
+cardClose.addEventListener('click', function () {
+  closeCard();
+});
