@@ -192,6 +192,8 @@ fieldset {
   margin: auto;
 
   border-radius: 50%;
+
+  pointer-events: none;
 }
 
 .map__pin:not(.map__pin--main)::after {

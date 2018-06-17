@@ -1,5 +1,8 @@
 'use strict';
 
+var ENTER_KEYCODE = 13;
+var ESC_KEYCODE = 27;
+
 var titles = ['Большая уютная квартира', 'Маленькая неуютная квартира', 'Огромный прекрасный дворец', 'Маленький ужасный дворец', 'Красивый гостевой домик', 'Некрасивый негостеприимный домик', 'Уютное бунгало далеко от моря', 'Неуютное бунгало по колено в воде'];
 
 var typesEn = ['palace', 'flat', 'house', 'bungalo'];
@@ -21,8 +24,6 @@ var generateRandomFeatures = function () {
   var randomLength = Math.floor(Math.random() * features.length);
   return features.slice(0, randomLength);
 };
-
-// var photosAvatar = [1, 2, 3, 4, 5, 6, 7, 8];
 
 var generateRandomData = function (id) {
   return {
@@ -77,21 +78,9 @@ function createPin(data) {
 var mapPinsContainer = document.querySelector('.map__pins');
 var mapFiltersContainer = document.querySelector('.map__filters-container');
 
-// var onPinClick = function (e) {
-//   var pinIndex = mapPinsElements.findIndex(function (element) {
-//     return element === e.currentTarget;
-//   });
-//   if (pinIndex !== -1) {
-//     showCard(pinIndex);
-//   }
-// };
-
 var onMapPinsContainerClick = function (e) {
-  // надо понять мы по кнопке кликнули или нет
-  // console.log('onMapPinsContainerClick', e.target);
-  var button = tryGetButtonAsTarget(e.target); // возвращает либо кнопку, либо ничего
+  var button = tryGetButtonAsTarget(e.target);
   if (button) {
-    // точно так же находим индекс
     var pinIndex = mapPinsElements.findIndex(function (element) {
       return element === button;
     });
@@ -102,51 +91,15 @@ var onMapPinsContainerClick = function (e) {
 };
 
 var tryGetButtonAsTarget = function (target) {
-  // тут нам надо убедиться что мы кликнули по кнопке
-  // var buttons = document.querySelectorAll('.map__pins button[type="button"]');
-  // var buttonsImg = document.querySelectorAll('.map__pins button[type="button"]>img');
-  if (target.tagName === 'BUTTON') {
+  if (target !== mainPinElement && target.tagName === 'BUTTON') {
     return target;
-    // todo еще надо учесть картинку и исключить pin_main
   } else {
     return undefined;
   }
 };
 
-var ENTER_KEYCODE = 13;
-// var ESC_KEYCODE = 27;
-
-// var cardClose = document.querySelector('.popup__close');
-
-// var closeCard = function () {
-//   document.classList.add('hidden');
-// };
-
-// cardClose.addEventListener('click', closeCard);
-// cardClose.addEventListener('keydown', function (evt) {
-//   if (evt.keyCode === ENTER_KEYCODE) {
-//     closeCard();
-//   }
-//   if (evt.keyCode === ESC_KEYCODE) {
-//     closeCard();
-//   }
-// });
-
-
-// нам этот список нужен только для определения индекса текущего элемента, по которому мы кликнули (чтобы сопоставить пин и его инфу)
 var mapPinsElements = [];
 
-// var createPins = function () {
-//   for (var j = 0; j < 8; j++) {
-//     var data = ads[j];
-//     var pinElement = createPin(data);
-//     mapPinsElements.push(pinElement);
-//     pinElement.addEventListener('click', onPinClick); // на каждый элемент навешиваем обработчик
-//     mapPinsContainer.appendChild(pinElement);
-//   }
-// };
-
-// вариант с делегированием: разница в том что обраотчик клика добавится только 1 раз, а не 8
 var createPins = function () {
   for (var j = 0; j < 8; j++) {
     var data = ads[j];
@@ -154,11 +107,10 @@ var createPins = function () {
     mapPinsElements.push(pinElement);
     mapPinsContainer.appendChild(pinElement);
   }
-  mapPinsContainer.addEventListener('click', onMapPinsContainerClick); // навешиваем обработчик только на контейнер, один раз
+  mapPinsContainer.addEventListener('click', onMapPinsContainerClick);
 };
 
 var showCard = function (index) {
-  // todo удалить предыдущую карточку
   var mapCard = document.querySelector('.map__card');
   if (mapCard) {
     mapCard.parentNode.removeChild(mapCard);
@@ -166,6 +118,24 @@ var showCard = function (index) {
   var data = ads[index];
   var map = document.querySelector('section.map');
   map.insertBefore(createCard(data), mapFiltersContainer);
+
+  var cardClose = document.querySelector('.map__card.popup');
+  var closeButton = cardClose.querySelector('.popup__close');
+
+  // Закрытие карточки
+  var closeCard = function () {
+    cardClose.classList.add('hidden');
+  };
+
+  closeButton.addEventListener('click', closeCard);
+  closeButton.addEventListener('keydown', function (evt) {
+    if (evt.keyCode === ENTER_KEYCODE) {
+      closeCard();
+    }
+    if (evt.keyCode === ESC_KEYCODE) {
+      closeCard();
+    }
+  });
 };
 
 var template = document.querySelector('template');
@@ -176,7 +146,6 @@ var translateFlatType = function (typeEn) {
 };
 
 // Функция вывода карточки
-
 var createCard = function (card) {
 
   var cardElement = carTemplate.cloneNode(true);
@@ -224,16 +193,14 @@ var mapMainPinY = mainPinElement.style.top;
 
 // Определение координат mainPin
 var getMainPinXY = function (pos, gap) {
-  return Number.parseInt(pos.split('px', 1), 10) + gap;
+  return parseInt(pos.split('px', 1), 10) + gap;
 };
 
-// Добавление в инпут формы
+// Добавление в инпут адреса формы
 var inputAddress = document.querySelector('#address');
 inputAddress.value = getMainPinXY(mapMainPinX, MAIN_PIN_X) + ', ' + getMainPinXY(mapMainPinY, MAIN_PIN_Y);
 
 // Активация страницы
-
-
 var form = document.querySelector('.ad-form');
 
 var enableForm = function () {
@@ -243,10 +210,15 @@ var enableForm = function () {
   }
 };
 
+var pinsCreated = false;
+
 var onMainPinClick = function () {
   showMap.classList.remove('map--faded');
   enableForm();
-  createPins();
+  if (!pinsCreated) {
+    createPins();
+    pinsCreated = true;
+  }
 };
 
 mainPinElement.addEventListener('keydown', function (evt) {
@@ -257,13 +229,4 @@ mainPinElement.addEventListener('keydown', function (evt) {
 
 mainPinElement.addEventListener('mouseup', function () {
   onMainPinClick();
-});
-
-var cardClose = document.querySelector('.popup__close');
-var closeCard = function () {
-  document.classList.add('hidden');
-};
-
-cardClose.addEventListener('click', function () {
-  closeCard();
 });
