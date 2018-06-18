@@ -14,6 +14,11 @@ var ROOMS = {
 var MAIN_PIN_X = 32;
 var MAIN_PIN_Y = 84;
 
+var MAX_TOP_Y = 130;
+var MAX_BOTTOM_Y = 630;
+var MAX_LEFT_X = 0;
+var MAX_RIGHT_X = 1200;
+
 
 var titles = ['Большая уютная квартира', 'Маленькая неуютная квартира', 'Огромный прекрасный дворец', 'Маленький ужасный дворец', 'Красивый гостевой домик', 'Некрасивый негостеприимный домик', 'Уютное бунгало далеко от моря', 'Неуютное бунгало по колено в воде'];
 
@@ -291,4 +296,65 @@ selectRoomNumber.addEventListener('change', function (evt) {
     selectCapacity[visitors[s]].disabled = false;
     selectCapacity.selectedIndex = visitors[0];
   }
+});
+
+// Перетаскивание маркера
+
+mainPinElement.addEventListener('mousedown', function (evt) {
+  evt.preventDefault();
+
+  var startCoords = {
+    x: evt.clientX,
+    y: evt.clientY
+  };
+
+  var onMouseMove = function (moveEvt) {
+    moveEvt.preventDefault();
+
+    var shift = {
+      x: startCoords.x - moveEvt.clientX,
+      y: startCoords.y - moveEvt.clientY
+    };
+
+    startCoords = {
+      x: moveEvt.clientX,
+      y: moveEvt.clientY
+    };
+
+    mainPinElement.style.top = (mainPinElement.offsetTop - shift.y) + 'px';
+    mainPinElement.style.left = (mainPinElement.offsetLeft - shift.x) + 'px';
+
+    addCoordsToInput();
+
+    var changeLeftCoord = parseInt(mainPinElement.style.left.split('px')[0], 10);
+    var changeTopCoord = parseInt(mainPinElement.style.top.split('px')[0], 10);
+
+    if (changeTopCoord < MAX_TOP_Y - MAIN_PIN_Y) {
+      mainPinElement.style.top = MAX_TOP_Y - MAIN_PIN_Y + 'px';
+    }
+
+    if (changeTopCoord > MAX_BOTTOM_Y - MAIN_PIN_Y) {
+      mainPinElement.style.top = MAX_BOTTOM_Y - MAIN_PIN_Y + 'px';
+    }
+
+    if (changeLeftCoord < MAX_LEFT_X - MAIN_PIN_X) {
+      mainPinElement.style.left = MAX_LEFT_X - MAIN_PIN_X + 'px';
+    }
+
+    if (changeLeftCoord > MAX_RIGHT_X - MAIN_PIN_X) {
+      mainPinElement.style.left = MAX_RIGHT_X - MAIN_PIN_X + 'px';
+    }
+
+  };
+
+  var onMouseUp = function (upEvt) {
+    upEvt.preventDefault();
+
+    document.removeEventListener('mousemove', onMouseMove);
+    document.removeEventListener('mouseup', onMouseUp);
+  };
+
+  document.addEventListener('mousemove', onMouseMove);
+  document.addEventListener('mouseup', onMouseUp);
+
 });
