@@ -3,8 +3,17 @@
 var ENTER_KEYCODE = 13;
 var ESC_KEYCODE = 27;
 
+var MIN_PRICES = [0, 1000, 5000, 10000];
+var ROOMS = {
+  one: [2],
+  two: [2, 1],
+  three: [2, 1, 0],
+  hundred: [3]
+};
+
 var MAIN_PIN_X = 32;
 var MAIN_PIN_Y = 84;
+
 
 var titles = ['Большая уютная квартира', 'Маленькая неуютная квартира', 'Огромный прекрасный дворец', 'Маленький ужасный дворец', 'Красивый гостевой домик', 'Некрасивый негостеприимный домик', 'Уютное бунгало далеко от моря', 'Неуютное бунгало по колено в воде'];
 
@@ -96,9 +105,8 @@ var onMapPinsContainerClick = function (e) {
 var tryGetButtonAsTarget = function (target) {
   if (target !== mainPinElement && target.tagName === 'BUTTON') {
     return target;
-  } else {
-    return undefined;
   }
+  return undefined;
 };
 
 var mapPinsElements = [];
@@ -196,8 +204,6 @@ var getDisabledFields = function (input) {
 getDisabledFields(true);
 
 var mainPinElement = document.querySelector('.map__pin--main');
-var mapMainPinX = mainPinElement.style.left;
-var mapMainPinY = mainPinElement.style.top;
 
 // Определение координат mainPin
 var getMainPinXY = function (pos, gap) {
@@ -206,7 +212,12 @@ var getMainPinXY = function (pos, gap) {
 
 // Добавление в инпут адреса формы
 var inputAddress = document.querySelector('#address');
-inputAddress.value = getMainPinXY(mapMainPinX, MAIN_PIN_X) + ', ' + getMainPinXY(mapMainPinY, MAIN_PIN_Y);
+var addCoordsToInput = function () {
+  inputAddress.value = getMainPinXY(mainPinElement.style.left, MAIN_PIN_X) + ', ' + getMainPinXY(mainPinElement.style.top, MAIN_PIN_Y);
+};
+
+addCoordsToInput();
+
 
 // Активация страницы
 var form = document.querySelector('.ad-form');
@@ -240,24 +251,14 @@ mainPinElement.addEventListener('mouseup', function () {
 });
 
 // Ввод данных
-var ALL_PRICES = [0, 1000, 5000, 10000];
-var ROOMS = {
-  one: [2],
-  two: [2, 1],
-  three: [2, 1, 0],
-  hundred: [3]
-};
 
 var selectType = document.querySelector('#type');
 var inputPrice = document.querySelector('#price');
 
 selectType.addEventListener('change', function () {
-  for (var p = 0; p < ALL_PRICES.length; p++) {
-    if (selectType.selectedIndex === p) {
-      inputPrice.placeholder = ALL_PRICES[p];
-      inputPrice.min = ALL_PRICES[p];
-    }
-  }
+  var minPrice = MIN_PRICES[selectType.selectedIndex];
+  inputPrice.placeholder = minPrice;
+  inputPrice.min = minPrice;
 });
 
 var selectTimein = document.querySelector('#timein');
