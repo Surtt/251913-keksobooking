@@ -321,30 +321,32 @@ mainPinElement.addEventListener('mousedown', function (evt) {
       y: moveEvt.clientY
     };
 
-    mainPinElement.style.top = (mainPinElement.offsetTop - shift.y) + 'px';
-    mainPinElement.style.left = (mainPinElement.offsetLeft - shift.x) + 'px';
+    var newTop = (mainPinElement.offsetTop - shift.y) + 'px';
+    var newLeft = (mainPinElement.offsetLeft - shift.x) + 'px';
 
     addCoordsToInput();
 
-    var changeLeftCoord = parseInt(mainPinElement.style.left.split('px')[0], 10);
-    var changeTopCoord = parseInt(mainPinElement.style.top.split('px')[0], 10);
+    var changeLeftCoord = parseInt(mainPinElement.style.left, 10);
+    var changeTopCoord = parseInt(mainPinElement.style.top, 10);
 
     if (changeTopCoord < MAX_TOP_Y - MAIN_PIN_Y) {
-      mainPinElement.style.top = MAX_TOP_Y - MAIN_PIN_Y + 'px';
+      newTop = MAX_TOP_Y - MAIN_PIN_Y + 'px';
     }
 
     if (changeTopCoord > MAX_BOTTOM_Y - MAIN_PIN_Y) {
-      mainPinElement.style.top = MAX_BOTTOM_Y - MAIN_PIN_Y + 'px';
+      newTop = MAX_BOTTOM_Y - MAIN_PIN_Y + 'px';
     }
 
     if (changeLeftCoord < MAX_LEFT_X - MAIN_PIN_X) {
-      mainPinElement.style.left = MAX_LEFT_X - MAIN_PIN_X + 'px';
+      newLeft = MAX_LEFT_X - MAIN_PIN_X + 'px';
     }
 
     if (changeLeftCoord > MAX_RIGHT_X - MAIN_PIN_X) {
-      mainPinElement.style.left = MAX_RIGHT_X - MAIN_PIN_X + 'px';
+      newLeft = MAX_RIGHT_X - MAIN_PIN_X + 'px';
     }
 
+    mainPinElement.style.top = newTop;
+    mainPinElement.style.left = newLeft;
   };
 
   var onMouseUp = function (upEvt) {
