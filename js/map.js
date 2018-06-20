@@ -303,50 +303,37 @@ selectRoomNumber.addEventListener('change', function (evt) {
 mainPinElement.addEventListener('mousedown', function (evt) {
   evt.preventDefault();
 
-  var startCoords = {
-    x: evt.clientX,
-    y: evt.clientY
+  var mouseDownOffset = {
+    x: document.documentElement.scrollLeft + evt.clientX - mainPinElement.offsetLeft,
+    y: document.documentElement.scrollTop + evt.clientY - mainPinElement.offsetTop
   };
 
   var onMouseMove = function (moveEvt) {
     moveEvt.preventDefault();
 
-    var shift = {
-      x: startCoords.x - moveEvt.clientX,
-      y: startCoords.y - moveEvt.clientY
-    };
-
-    startCoords = {
-      x: moveEvt.clientX,
-      y: moveEvt.clientY
-    };
-
-    var newTop = (mainPinElement.offsetTop - shift.y) + 'px';
-    var newLeft = (mainPinElement.offsetLeft - shift.x) + 'px';
+    var newTop = document.documentElement.scrollTop + moveEvt.clientY - mouseDownOffset.y;
+    var newLeft = document.documentElement.scrollLeft + moveEvt.clientX - mouseDownOffset.x;
 
     addCoordsToInput();
 
-    var changeLeftCoord = parseInt(mainPinElement.style.left, 10);
-    var changeTopCoord = parseInt(mainPinElement.style.top, 10);
-
-    if (changeTopCoord < MAX_TOP_Y - MAIN_PIN_Y) {
+    if (newTop < MAX_TOP_Y - MAIN_PIN_Y) {
       newTop = MAX_TOP_Y - MAIN_PIN_Y + 'px';
     }
 
-    if (changeTopCoord > MAX_BOTTOM_Y - MAIN_PIN_Y) {
+    if (newTop > MAX_BOTTOM_Y - MAIN_PIN_Y) {
       newTop = MAX_BOTTOM_Y - MAIN_PIN_Y + 'px';
     }
 
-    if (changeLeftCoord < MAX_LEFT_X - MAIN_PIN_X) {
+    if (newLeft < MAX_LEFT_X - MAIN_PIN_X) {
       newLeft = MAX_LEFT_X - MAIN_PIN_X + 'px';
     }
 
-    if (changeLeftCoord > MAX_RIGHT_X - MAIN_PIN_X) {
+    if (newLeft > MAX_RIGHT_X - MAIN_PIN_X) {
       newLeft = MAX_RIGHT_X - MAIN_PIN_X + 'px';
     }
 
-    mainPinElement.style.top = newTop;
-    mainPinElement.style.left = newLeft;
+    mainPinElement.style.top = newTop + 'px';
+    mainPinElement.style.left = newLeft + 'px';
   };
 
   var onMouseUp = function (upEvt) {
