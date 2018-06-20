@@ -14,6 +14,11 @@ var ROOMS = {
 var MAIN_PIN_X = 32;
 var MAIN_PIN_Y = 84;
 
+var MAX_TOP_Y = 130;
+var MAX_BOTTOM_Y = 630;
+var MAX_LEFT_X = 0;
+var MAX_RIGHT_X = 1200;
+
 
 var titles = ['Большая уютная квартира', 'Маленькая неуютная квартира', 'Огромный прекрасный дворец', 'Маленький ужасный дворец', 'Красивый гостевой домик', 'Некрасивый негостеприимный домик', 'Уютное бунгало далеко от моря', 'Неуютное бунгало по колено в воде'];
 
@@ -291,4 +296,54 @@ selectRoomNumber.addEventListener('change', function (evt) {
     selectCapacity[visitors[s]].disabled = false;
     selectCapacity.selectedIndex = visitors[0];
   }
+});
+
+// Перетаскивание маркера
+
+mainPinElement.addEventListener('mousedown', function (evt) {
+  evt.preventDefault();
+
+  var mouseDownOffset = {
+    x: document.documentElement.scrollLeft + evt.clientX - mainPinElement.offsetLeft,
+    y: document.documentElement.scrollTop + evt.clientY - mainPinElement.offsetTop
+  };
+
+  var onMouseMove = function (moveEvt) {
+    moveEvt.preventDefault();
+
+    var newTop = document.documentElement.scrollTop + moveEvt.clientY - mouseDownOffset.y;
+    var newLeft = document.documentElement.scrollLeft + moveEvt.clientX - mouseDownOffset.x;
+
+    addCoordsToInput();
+
+    if (newTop < MAX_TOP_Y - MAIN_PIN_Y) {
+      newTop = MAX_TOP_Y - MAIN_PIN_Y + 'px';
+    }
+
+    if (newTop > MAX_BOTTOM_Y - MAIN_PIN_Y) {
+      newTop = MAX_BOTTOM_Y - MAIN_PIN_Y + 'px';
+    }
+
+    if (newLeft < MAX_LEFT_X - MAIN_PIN_X) {
+      newLeft = MAX_LEFT_X - MAIN_PIN_X + 'px';
+    }
+
+    if (newLeft > MAX_RIGHT_X - MAIN_PIN_X) {
+      newLeft = MAX_RIGHT_X - MAIN_PIN_X + 'px';
+    }
+
+    mainPinElement.style.top = newTop + 'px';
+    mainPinElement.style.left = newLeft + 'px';
+  };
+
+  var onMouseUp = function (upEvt) {
+    upEvt.preventDefault();
+
+    document.removeEventListener('mousemove', onMouseMove);
+    document.removeEventListener('mouseup', onMouseUp);
+  };
+
+  document.addEventListener('mousemove', onMouseMove);
+  document.addEventListener('mouseup', onMouseUp);
+
 });
