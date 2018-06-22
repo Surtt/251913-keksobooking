@@ -2,8 +2,8 @@
 
 (function () {
 
-  var MAIN_PIN_X = 32;
-  var MAIN_PIN_Y = 84;
+  var MAIN_PIN_WIDTH = 65;
+  var MAIN_PIN_HEIGHT = 84;
 
   var MAX_TOP_Y = 130;
   var MAX_BOTTOM_Y = 630;
@@ -77,7 +77,7 @@
   };
 
   mainPinElement.addEventListener('keydown', function (evt) {
-    if (evt.keyCode === window.card.ENTER_KEYCODE) {
+    if (evt.keyCode === window.constants.ENTER_KEYCODE) {
       onMainPinClick();
     }
   });
@@ -89,7 +89,7 @@
   // Добавление в инпут адреса формы
   var inputAddress = document.querySelector('#address');
   var addCoordsToInput = function () {
-    inputAddress.value = getMainPinXY(mainPinElement.style.left, MAIN_PIN_X) + ', ' + getMainPinXY(mainPinElement.style.top, MAIN_PIN_Y);
+    inputAddress.value = Math.floor(getMainPinXY(mainPinElement.style.left, MAIN_PIN_WIDTH / 2)) + ', ' + getMainPinXY(mainPinElement.style.top, MAIN_PIN_HEIGHT);
   };
 
   addCoordsToInput();
@@ -116,22 +116,21 @@
     var newTop = document.documentElement.scrollTop + moveEvt.clientY - mouseDownOffset.y;
     var newLeft = document.documentElement.scrollLeft + moveEvt.clientX - mouseDownOffset.x;
 
-    if (newTop < MAX_TOP_Y - MAIN_PIN_Y) {
-      newTop = MAX_TOP_Y - MAIN_PIN_Y;
+    if (newTop < MAX_TOP_Y - MAIN_PIN_HEIGHT) {
+      newTop = MAX_TOP_Y - MAIN_PIN_HEIGHT;
     }
 
-    if (newTop > MAX_BOTTOM_Y - MAIN_PIN_Y) {
-      newTop = MAX_BOTTOM_Y - MAIN_PIN_Y;
+    if (newTop > MAX_BOTTOM_Y - MAIN_PIN_HEIGHT) {
+      newTop = MAX_BOTTOM_Y - MAIN_PIN_HEIGHT;
     }
 
-    if (newLeft < MAX_LEFT_X - MAIN_PIN_X) {
-      newLeft = MAX_LEFT_X - MAIN_PIN_X;
+    if (newLeft < MAX_LEFT_X - MAIN_PIN_WIDTH / 2) {
+      newLeft = MAX_LEFT_X - MAIN_PIN_WIDTH / 2;
     }
 
-    if (newLeft > MAX_RIGHT_X - MAIN_PIN_X) {
-      newLeft = MAX_RIGHT_X - MAIN_PIN_X;
+    if (newLeft > MAX_RIGHT_X - MAIN_PIN_WIDTH / 2) {
+      newLeft = Math.ceil(MAX_RIGHT_X - MAIN_PIN_WIDTH / 2);
     }
-
 
     mainPinElement.style.top = newTop + 'px';
     mainPinElement.style.left = newLeft + 'px';

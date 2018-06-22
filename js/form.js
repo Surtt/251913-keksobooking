@@ -76,9 +76,6 @@
   });
 
   window.form = {
-    MIN_PRICES: MIN_PRICES,
-    ROOMS: ROOMS,
-    getDisabledFields: getDisabledFields,
     enableForm: enableForm
   };
 

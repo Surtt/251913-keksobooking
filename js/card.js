@@ -2,7 +2,6 @@
 
 (function () {
 
-  var ENTER_KEYCODE = 13;
   var ESC_KEYCODE = 27;
 
   var template = document.querySelector('template');
@@ -36,7 +35,7 @@
 
     closeButton.addEventListener('click', closeCard);
     closeButton.addEventListener('keydown', function (evt) {
-      if (evt.keyCode === ENTER_KEYCODE) {
+      if (evt.keyCode === window.constants.ENTER_KEYCODE) {
         closeCard();
       }
       if (evt.keyCode === ESC_KEYCODE) {
@@ -68,8 +67,7 @@
   };
 
   window.card = {
-    showCard: showCard,
-    ENTER_KEYCODE: ENTER_KEYCODE
+    showCard: showCard
   };
 
 })();
