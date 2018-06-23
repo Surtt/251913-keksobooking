@@ -40,7 +40,7 @@
 
   var createPins = function () {
     for (var j = 0; j < 8; j++) {
-      var data = window.data.ads[j];
+      var data = window.ads[j];
       var pinElement = window.pin.createPin(data);
       mapPinsElements.push(pinElement);
       mapPinsContainer.appendChild(pinElement);

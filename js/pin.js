@@ -4,6 +4,7 @@
 
   var templateContent = document.querySelector('template').content;
   var pinTemplate = templateContent.querySelector('.map__pin');
+  var ads;
 
   // Функция создания метки
 
@@ -17,7 +18,22 @@
     return copy;
   }
 
+  var onSuccessLoad = function (dataServer) {
+    ads = dataServer;
+  };
+
+  var onErrorLoad = function (errorMessage) {
+    var node = document.createElement('div');
+    node.classList.add('error');
+    node.textContent = errorMessage;
+    document.body.insertAdjacentElement('afterbegin', node);
+  };
+
+  window.backend.load(onSuccessLoad, onErrorLoad);
+
+
   window.pin = {
-    createPin: createPin
+    createPin: createPin,
+    ads: ads
   };
 })();
