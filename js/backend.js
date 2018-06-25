@@ -6,7 +6,7 @@
   var URL_POST = 'https://js.dump.academy/keksobooking';
 
 
-  var getData = function (onLoad, onError, method, data) {
+  var makeRequest = function (onLoad, onError, method, data) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
 
@@ -46,10 +46,10 @@
 
   window.backend = {
     load: function (onLoad, onError) {
-      getData(onLoad, onError);
+      makeRequest(onLoad, onError, 'GET');
     },
     save: function (data, onSave, onError) {
-      getData(onSave, onError);
+      makeRequest(onSave, onError, 'POST', data);
     }
   };
 
