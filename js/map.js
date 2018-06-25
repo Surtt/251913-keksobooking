@@ -77,8 +77,6 @@
         createPins();
         pinsCreated = true;
       }
-    } else {
-      alert('Sorry, data not loaded');
     }
   };
 
