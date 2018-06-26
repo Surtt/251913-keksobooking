@@ -6,7 +6,7 @@
   var URL_POST = 'https://js.dump.academy/keksobooking';
 
 
-  var makeRequest = function (onLoad, onError, method, data) {
+  var makeRequest = function (method, url, onLoad, onError, data) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
 
@@ -35,21 +35,16 @@
       onError('Запрос не успел выполниться за ' + xhr.timeout + 'мс');
     });
 
-    if (method === 'GET') {
-      xhr.open('GET', URL_GET);
-      xhr.send();
-    } else if (method === 'POST') {
-      xhr.open('POST', URL_POST);
-      xhr.send(data);
-    }
+    xhr.open(method, url);
+    xhr.send(data);
   };
 
   window.backend = {
     load: function (onLoad, onError) {
-      makeRequest(onLoad, onError, 'GET');
+      makeRequest('GET', URL_GET, onLoad, onError);
     },
     save: function (data, onSave, onError) {
-      makeRequest(onSave, onError, 'POST', data);
+      makeRequest('POST', URL_POST, onSave, onError, data);
     }
   };
 

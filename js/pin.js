@@ -2,12 +2,6 @@
 
 (function () {
 
-  var templateContent = document.querySelector('template').content;
-  var pinTemplate = templateContent.querySelector('.map__pin');
-  var ads;
-
-  // Функция создания метки
-
   function createPin(data) {
 
     var copy = pinTemplate.cloneNode(true);
@@ -18,22 +12,10 @@
     return copy;
   }
 
-  var onSuccessLoad = function (dataServer) {
-    ads = dataServer;
-  };
-
-  var onErrorLoad = function (errorMessage) {
-    var node = document.createElement('div');
-    node.classList.add('error');
-    node.textContent = errorMessage;
-    document.body.insertAdjacentElement('afterbegin', node);
-  };
-
-  window.backend.load(onSuccessLoad, onErrorLoad);
-
+  var templateContent = document.querySelector('template').content;
+  var pinTemplate = templateContent.querySelector('.map__pin');
 
   window.pin = {
-    createPin: createPin,
-    ads: ads
+    createPin: createPin
   };
 })();
