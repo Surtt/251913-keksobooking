@@ -14,7 +14,8 @@
     if (mapCard) {
       mapCard.parentNode.removeChild(mapCard);
     }
-    var data = window.data.ads[index];
+    var ads = window.data.getAds();
+    var data = ads[index];
     var map = document.querySelector('section.map');
     map.insertBefore(createCard(data), mapFiltersContainer);
 

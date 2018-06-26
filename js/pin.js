@@ -2,11 +2,6 @@
 
 (function () {
 
-  var templateContent = document.querySelector('template').content;
-  var pinTemplate = templateContent.querySelector('.map__pin');
-
-  // Функция создания метки
-
   function createPin(data) {
 
     var copy = pinTemplate.cloneNode(true);
@@ -16,6 +11,9 @@
     copy.querySelector('.map__pin img').alt = data.offer.title;
     return copy;
   }
+
+  var templateContent = document.querySelector('template').content;
+  var pinTemplate = templateContent.querySelector('.map__pin');
 
   window.pin = {
     createPin: createPin

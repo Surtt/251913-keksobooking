@@ -39,8 +39,9 @@
   var mapPinsElements = [];
 
   var createPins = function () {
+    var ads = window.data.getAds();
     for (var j = 0; j < 8; j++) {
-      var data = window.data.ads[j];
+      var data = ads[j];
       var pinElement = window.pin.createPin(data);
       mapPinsElements.push(pinElement);
       mapPinsContainer.appendChild(pinElement);
@@ -68,11 +69,14 @@
   var pinsCreated = false;
 
   var onMainPinClick = function () {
-    showMap.classList.remove('map--faded');
-    window.form.enableForm();
-    if (!pinsCreated) {
-      createPins();
-      pinsCreated = true;
+    var ads = window.data.getAds();
+    if (ads) {
+      showMap.classList.remove('map--faded');
+      window.form.enableForm();
+      if (!pinsCreated) {
+        createPins();
+        pinsCreated = true;
+      }
     }
   };
 
@@ -146,6 +150,10 @@
   };
 
   mainPinElement.addEventListener('mousedown', onMouseDown);
+
+  window.map = {
+    addCoordsToInput: addCoordsToInput
+  };
 
 })();
 

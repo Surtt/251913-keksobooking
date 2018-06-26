@@ -37,10 +37,17 @@
   var selectType = document.querySelector('#type');
   var inputPrice = document.querySelector('#price');
 
+  var setInputPrice = function () {
+    for (var i = 0; i < MIN_PRICES.length; i++) {
+      if (selectType.selectedIndex === i) {
+        inputPrice.placeholder = MIN_PRICES[i];
+        inputPrice.min = MIN_PRICES[i];
+      }
+    }
+  };
+
   selectType.addEventListener('change', function () {
-    var minPrice = MIN_PRICES[selectType.selectedIndex];
-    inputPrice.placeholder = minPrice;
-    inputPrice.min = minPrice;
+    setInputPrice();
   });
 
   var selectTimein = document.querySelector('#timein');
@@ -73,6 +80,15 @@
       selectCapacity[visitors[s]].disabled = false;
       selectCapacity.selectedIndex = visitors[0];
     }
+  });
+
+  form.addEventListener('submit', function (evt) {
+    window.backend.save(new FormData(form), function () {
+      form.reset();
+      window.map.addCoordsToInput();
+      setInputPrice();
+    });
+    evt.preventDefault();
   });
 
   window.form = {
