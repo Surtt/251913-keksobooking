@@ -152,7 +152,8 @@
   mainPinElement.addEventListener('mousedown', onMouseDown);
 
   window.map = {
-    addCoordsToInput: addCoordsToInput
+    addCoordsToInput: addCoordsToInput,
+    createPins: createPins
   };
 
 })();
