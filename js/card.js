@@ -9,6 +9,22 @@
 
   var mapFiltersContainer = document.querySelector('.map__filters-container');
 
+  // Закрытие карточки
+  var closeCard = function () {
+    var cardClose = document.querySelector('.map__card.popup');
+    if (cardClose) {
+      cardClose.classList.add('hidden');
+    }
+
+    document.removeEventListener('keydown', window.onPopupEscPress);
+  };
+
+  var onPopupEscPress = function (evt) {
+    if (evt.keyCode === ESC_KEYCODE) {
+      closeCard();
+    }
+  };
+
   var showCard = function (index) {
     var mapCard = document.querySelector('.map__card');
     if (mapCard) {
@@ -19,20 +35,9 @@
     var map = document.querySelector('section.map');
     map.insertBefore(createCard(data), mapFiltersContainer);
 
-    var cardClose = document.querySelector('.map__card.popup');
-    var closeButton = cardClose.querySelector('.popup__close');
 
-    // Закрытие карточки
-    var closeCard = function () {
-      cardClose.classList.add('hidden');
-      document.removeEventListener('keydown', onPopupEscPress);
-    };
+    var closeButton = document.querySelector('.popup__close');
 
-    var onPopupEscPress = function (evt) {
-      if (evt.keyCode === ESC_KEYCODE) {
-        closeCard();
-      }
-    };
 
     closeButton.addEventListener('click', closeCard);
     closeButton.addEventListener('keydown', function (evt) {
@@ -61,14 +66,20 @@
       cardElement.querySelector('.popup__features').innerHTML += '<li class="popup__feature popup__feature--' + card.offer.features[k] + '"></li>';
     }
     cardElement.querySelector('.popup__description').textContent = card.offer.description;
-    cardElement.querySelector('.popup__photos').src = card.offer.photos;
+    for (var l = 0; l < card.offer.photos.length; l++) {
+      cardElement.querySelector('.popup__photos').innerHTML += '<img src="' + card.offer.photos[l] + '" class="popup__photo" width="45" height="40">';
+    }
+    // cardElement.querySelector('.popup__photos').src = card.offer.photos;
     cardElement.querySelector('.popup__avatar').src = card.author.avatar;
 
     return cardElement;
   };
 
+
   window.card = {
-    showCard: showCard
+    showCard: showCard,
+    onPopupEscPress: onPopupEscPress,
+    closeCard: closeCard
   };
 
 })();

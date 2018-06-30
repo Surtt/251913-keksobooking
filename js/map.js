@@ -14,41 +14,6 @@
   var showMap = document.querySelector('.map');
   showMap.classList.remove('map--faded');
 
-  var mapPinsContainer = document.querySelector('.map__pins');
-
-
-  var onMapPinsContainerClick = function (e) {
-    var button = tryGetButtonAsTarget(e.target);
-    if (button) {
-      var pinIndex = mapPinsElements.findIndex(function (element) {
-        return element === button;
-      });
-      if (pinIndex !== -1) {
-        window.card.showCard(pinIndex);
-      }
-    }
-  };
-
-  var tryGetButtonAsTarget = function (target) {
-    if (target !== mainPinElement && target.tagName === 'BUTTON') {
-      return target;
-    }
-    return undefined;
-  };
-
-  var mapPinsElements = [];
-
-  var createPins = function () {
-    var ads = window.data.getAds();
-    for (var j = 0; j < 8; j++) {
-      var data = ads[j];
-      var pinElement = window.pin.createPin(data);
-      mapPinsElements.push(pinElement);
-      mapPinsContainer.appendChild(pinElement);
-    }
-    mapPinsContainer.addEventListener('click', onMapPinsContainerClick);
-  };
-
 
   var fragmentCards = document.createDocumentFragment();
 
@@ -74,7 +39,7 @@
       showMap.classList.remove('map--faded');
       window.form.enableForm();
       if (!pinsCreated) {
-        createPins();
+        window.pins.createPins(ads);
         pinsCreated = true;
       }
     }
@@ -152,8 +117,7 @@
   mainPinElement.addEventListener('mousedown', onMouseDown);
 
   window.map = {
-    addCoordsToInput: addCoordsToInput,
-    createPins: createPins
+    addCoordsToInput: addCoordsToInput
   };
 
 })();
