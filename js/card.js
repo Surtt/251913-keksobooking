@@ -25,11 +25,15 @@
     }
   };
 
-  var showCard = function (cardData) {
+  var deleteMapCard = function () {
     var mapCard = document.querySelector('.map__card');
     if (mapCard) {
       mapCard.parentNode.removeChild(mapCard);
     }
+  };
+
+  var showCard = function (cardData) {
+    deleteMapCard();
     var map = document.querySelector('section.map');
     map.insertBefore(createCard(cardData), mapFiltersContainer);
 
@@ -75,7 +79,8 @@
 
   window.card = {
     showCard: showCard,
-    closeCard: closeCard
+    closeCard: closeCard,
+    deleteMapCard: deleteMapCard
   };
 
 })();

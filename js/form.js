@@ -85,10 +85,51 @@
   form.addEventListener('submit', function (evt) {
     window.backend.save(new FormData(form), function () {
       form.reset();
-      window.map.addCoordsToInput();
-      setInputPrice();
+      resetForm();
+      resetFilterForm();
+      setMessageSuccess();
     });
     evt.preventDefault();
+  });
+
+  var setMessageSuccess = function () {
+    var messageSuccess = document.querySelector('.success');
+    messageSuccess.classList.remove('hidden');
+    messageSuccess.addEventListener('click', function () {
+      messageSuccess.classList.add('hidden');
+    });
+  };
+
+  // Сброс формы
+  var resetForm = function () {
+    getDisabledFields(true);
+    form.classList.add('ad-form--disabled');
+    document.querySelector('.map').classList.add('map--faded');
+    window.pins.deletePins();
+    window.map.mainPinElement.style.left = '570px';
+    window.map.mainPinElement.style.top = '375px';
+    window.map.addCoordsToInput();
+    window.card.deleteMapCard();
+  };
+
+  var resetFilterForm = function () {
+    var mapFilters = document.querySelectorAll('.map__filter');
+    var mapCheckboxes = document.querySelectorAll('.map__checkbox');
+
+    for (var i = 0; i < mapFilters.length; i++) {
+      mapFilters[i].value = 'any';
+    }
+    for (var j = 0; j < mapCheckboxes.length; j++) {
+      mapCheckboxes[j].checked = false;
+    }
+  };
+
+  var formResetButton = document.querySelector('.ad-form__reset');
+  formResetButton.addEventListener('click', function (evt) {
+    evt.preventDefault();
+    form.reset();
+    resetForm();
+    resetFilterForm();
   });
 
   window.form = {
