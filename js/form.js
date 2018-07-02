@@ -87,17 +87,29 @@
       form.reset();
       resetForm();
       resetFilterForm();
-      setMessageSuccess();
+      showSuccessMessage();
     });
     evt.preventDefault();
   });
 
-  var setMessageSuccess = function () {
-    var messageSuccess = document.querySelector('.success');
+  var messageSuccess = document.querySelector('.success');
+  var showSuccessMessage = function () {
+
     messageSuccess.classList.remove('hidden');
-    messageSuccess.addEventListener('click', function () {
-      messageSuccess.classList.add('hidden');
-    });
+    messageSuccess.addEventListener('click', hideMessage);
+    document.body.addEventListener('keydown', hideMessage);
+  };
+
+  var hideMessage = function () {
+    messageSuccess.classList.add('hidden');
+    messageSuccess.removeEventListener('click', hideMessage);
+    document.body.removeEventListener('keydown', onKeyUp);
+  };
+
+  var onKeyUp = function (evt) {
+    if (evt.keyCode === window.constants.ESC_KEYCODE) {
+      hideMessage();
+    }
   };
 
   // Сброс формы
@@ -106,10 +118,9 @@
     form.classList.add('ad-form--disabled');
     document.querySelector('.map').classList.add('map--faded');
     window.pins.deletePins();
-    window.map.mainPinElement.style.left = '570px';
-    window.map.mainPinElement.style.top = '375px';
+    window.map.resetMap();
     window.map.addCoordsToInput();
-    window.card.deleteMapCard();
+    window.card.closeCard();
   };
 
   var resetFilterForm = function () {

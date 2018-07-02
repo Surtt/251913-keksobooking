@@ -116,9 +116,15 @@
 
   mainPinElement.addEventListener('mousedown', onMouseDown);
 
+  var resetMap = function () {
+    mainPinElement.style.left = '570px';
+    mainPinElement.style.top = '375px';
+    pinsCreated = false;
+  };
+
   window.map = {
     addCoordsToInput: addCoordsToInput,
-    mainPinElement: mainPinElement
+    resetMap: resetMap
   };
 
 })();

@@ -2,8 +2,6 @@
 
 (function () {
 
-  var ESC_KEYCODE = 27;
-
   var template = document.querySelector('template');
   var carTemplate = template.content.querySelector('.map__card');
 
@@ -11,29 +9,23 @@
 
   // Закрытие карточки
   var closeCard = function () {
-    var cardClose = document.querySelector('.map__card.popup');
-    if (cardClose) {
-      cardClose.classList.add('hidden');
+    var mapCard = document.querySelector('.map__card');
+    if (mapCard) {
+      mapCard.parentNode.removeChild(mapCard);
     }
+    window.pins.deactivateCurrentPin();
 
     document.removeEventListener('keydown', onPopupEscPress);
   };
 
   var onPopupEscPress = function (evt) {
-    if (evt.keyCode === ESC_KEYCODE) {
+    if (evt.keyCode === window.constants.ESC_KEYCODE) {
       closeCard();
     }
   };
 
-  var deleteMapCard = function () {
-    var mapCard = document.querySelector('.map__card');
-    if (mapCard) {
-      mapCard.parentNode.removeChild(mapCard);
-    }
-  };
-
   var showCard = function (cardData) {
-    deleteMapCard();
+    closeCard();
     var map = document.querySelector('section.map');
     map.insertBefore(createCard(cardData), mapFiltersContainer);
 
@@ -44,10 +36,11 @@
       if (evt.keyCode === window.constants.ENTER_KEYCODE) {
         closeCard();
       }
-      if (evt.keyCode === ESC_KEYCODE) {
+      if (evt.keyCode === window.constants.ESC_KEYCODE) {
         closeCard();
       }
     });
+    closeButton.removeEventListener('keydown', closeCard);
   };
 
   // Функция вывода карточки
@@ -79,8 +72,7 @@
 
   window.card = {
     showCard: showCard,
-    closeCard: closeCard,
-    deleteMapCard: deleteMapCard
+    closeCard: closeCard
   };
 
 })();

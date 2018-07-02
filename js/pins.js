@@ -26,9 +26,13 @@
     mapPinsContainer.addEventListener('click', onMapPinsContainerClick);
   };
 
+  var activeClass = 'map__pin--active';
   var onMapPinsContainerClick = function (e) {
-    if (e.target.hasAttribute('data-id')) {
-      var cardData = getDataById(e.target.getAttribute('data-id'));
+    var pinElement = e.target;
+    if (pinElement.hasAttribute('data-id')) {
+      pinElement.classList.add(activeClass);
+      var dataId = pinElement.getAttribute('data-id');
+      var cardData = getDataById(dataId);
       window.card.showCard(cardData);
     }
   };
@@ -39,11 +43,19 @@
     });
   };
 
+  var deactivateCurrentPin = function () {
+    var pins = Array.from(document.querySelectorAll('.map__pin'));
+    pins.forEach(function (pin) {
+      pin.classList.remove(activeClass);
+    });
+  };
+
   var mapPinsElements = [];
 
   window.pins = {
     deletePins: deletePins,
-    createPins: createPins
+    createPins: createPins,
+    deactivateCurrentPin: deactivateCurrentPin
   };
 
 })();
