@@ -18,5 +18,4 @@
     debounce: debounce,
     DEBOUNCE_INTERVAL: DEBOUNCE_INTERVAL
   };
-
 })();

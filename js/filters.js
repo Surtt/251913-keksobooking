@@ -63,5 +63,4 @@
   };
 
   mapFilters.addEventListener('change', onFiltersChange);
-
 })();

@@ -11,11 +11,22 @@
   };
 
   var adFormElement = document.querySelectorAll('.ad-form fieldset');
+  var form = document.querySelector('.ad-form');
+  var selectType = document.querySelector('#type');
+  var inputPrice = document.querySelector('#price');
+  var selectTimein = document.querySelector('#timein');
+  var selectTimeout = document.querySelector('#timeout');
+  var selectRoomNumber = document.querySelector('#room_number');
+  var selectCapacity = document.querySelector('#capacity');
+  var messageSuccess = document.querySelector('.success');
+  var mapFilters = document.querySelectorAll('.map__filter');
+  var mapCheckboxes = document.querySelectorAll('.map__checkbox');
+  var formResetButton = document.querySelector('.ad-form__reset');
 
   // Все поля формы делаем неактивными
   var getDisabledFields = function (input) {
-    for (var m = 0; m < adFormElement.length; m++) {
-      adFormElement[m].disabled = input;
+    for (var i = 0; i < adFormElement.length; i++) {
+      adFormElement[i].disabled = input;
     }
   };
 
@@ -23,20 +34,14 @@
 
 
   // Активация страницы
-  var form = document.querySelector('.ad-form');
-
   var enableForm = function () {
     form.classList.remove('ad-form--disabled');
-    for (var n = 0; n < adFormElement.length; n++) {
-      adFormElement[n].removeAttribute('disabled');
+    for (var i = 0; i < adFormElement.length; i++) {
+      adFormElement[i].removeAttribute('disabled');
     }
   };
 
   // Ввод данных
-
-  var selectType = document.querySelector('#type');
-  var inputPrice = document.querySelector('#price');
-
   var setInputPrice = function () {
     for (var i = 0; i < MIN_PRICES.length; i++) {
       if (selectType.selectedIndex === i) {
@@ -49,9 +54,6 @@
   selectType.addEventListener('change', function () {
     setInputPrice();
   });
-
-  var selectTimein = document.querySelector('#timein');
-  var selectTimeout = document.querySelector('#timeout');
 
   var changeTime = function (timein, timeout) {
     if (timein.selectedIndex !== timeout.selectedIndex) {
@@ -67,17 +69,14 @@
     changeTime(selectTimeout, selectTimein);
   });
 
-  var selectRoomNumber = document.querySelector('#room_number');
-  var selectCapacity = document.querySelector('#capacity');
-
   selectRoomNumber.addEventListener('change', function (evt) {
-    for (var r = 0; r < selectCapacity.length; r++) {
-      selectCapacity[r].disabled = true;
+    for (var i = 0; i < selectCapacity.length; i++) {
+      selectCapacity[i].disabled = true;
     }
     var selectRooms = evt.target.selectedIndex;
     var visitors = Object.values(ROOMS)[selectRooms];
-    for (var s = 0; s < visitors.length; s++) {
-      selectCapacity[visitors[s]].disabled = false;
+    for (var j = 0; j < visitors.length; j++) {
+      selectCapacity[visitors[j]].disabled = false;
       selectCapacity.selectedIndex = visitors[0];
     }
   });
@@ -92,9 +91,8 @@
     evt.preventDefault();
   });
 
-  var messageSuccess = document.querySelector('.success');
-  var showSuccessMessage = function () {
 
+  var showSuccessMessage = function () {
     messageSuccess.classList.remove('hidden');
     messageSuccess.addEventListener('click', hideMessage);
     document.body.addEventListener('keydown', onKeyDown);
@@ -124,9 +122,6 @@
   };
 
   var resetFilterForm = function () {
-    var mapFilters = document.querySelectorAll('.map__filter');
-    var mapCheckboxes = document.querySelectorAll('.map__checkbox');
-
     for (var i = 0; i < mapFilters.length; i++) {
       mapFilters[i].value = 'any';
     }
@@ -135,7 +130,6 @@
     }
   };
 
-  var formResetButton = document.querySelector('.ad-form__reset');
   formResetButton.addEventListener('click', function (evt) {
     evt.preventDefault();
     form.reset();
@@ -146,5 +140,4 @@
   window.form = {
     enableForm: enableForm
   };
-
 })();

@@ -47,5 +47,4 @@
       makeRequest('POST', URL_POST, onSave, onError, data);
     }
   };
-
 })();

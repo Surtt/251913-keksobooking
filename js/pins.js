@@ -4,21 +4,22 @@
 
   var MAX_VISIBLE_PINS = 5;
 
+  var activeClass = 'map__pin--active';
+
   var mapPinsContainer = document.querySelector('.map__pins');
 
   var deletePins = function () {
-    var pins = document.querySelector('.map__pins');
-    var buttons = pins.querySelectorAll('button');
+    var buttons = mapPinsContainer.querySelectorAll('button');
 
-    for (var j = 1; j < buttons.length; j++) {
-      pins.removeChild(buttons[j]);
+    for (var i = 1; i < buttons.length; i++) {
+      mapPinsContainer.removeChild(buttons[i]);
     }
   };
 
   var createPins = function (ads) {
     var displayedPins = Math.min(ads.length, MAX_VISIBLE_PINS);
-    for (var j = 0; j < displayedPins; j++) {
-      var data = ads[j];
+    for (var i = 0; i < displayedPins; i++) {
+      var data = ads[i];
       var pinElement = window.pin.createPin(data, data.author.avatar);
       mapPinsElements.push(pinElement);
       mapPinsContainer.appendChild(pinElement);
@@ -26,7 +27,6 @@
     mapPinsContainer.addEventListener('click', onMapPinsContainerClick);
   };
 
-  var activeClass = 'map__pin--active';
   var onMapPinsContainerClick = function (e) {
     var pinElement = e.target;
     if (pinElement.hasAttribute('data-id')) {
@@ -57,5 +57,4 @@
     createPins: createPins,
     deactivateCurrentPin: deactivateCurrentPin
   };
-
 })();

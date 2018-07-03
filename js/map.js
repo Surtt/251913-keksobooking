@@ -14,16 +14,14 @@
   var showMap = document.querySelector('.map');
   showMap.classList.remove('map--faded');
 
-
+  // Возвращаем карту в исходное состояние, затемняем ее
+  document.querySelector('.map').classList.add('map--faded');
   var fragmentCards = document.createDocumentFragment();
+  var mainPinElement = document.querySelector('.map__pin--main');
+  var inputAddress = document.querySelector('#address');
 
   showMap.appendChild(fragmentCards);
 
-  // Возвращаем карту в исходное состояние, затемняем ее
-  document.querySelector('.map').classList.add('map--faded');
-
-
-  var mainPinElement = document.querySelector('.map__pin--main');
 
   // Определение координат mainPin
   var getMainPinXY = function (pos, gap) {
@@ -56,7 +54,6 @@
   });
 
   // Добавление в инпут адреса формы
-  var inputAddress = document.querySelector('#address');
   var addCoordsToInput = function () {
     inputAddress.value = Math.floor(getMainPinXY(mainPinElement.style.left, MAIN_PIN_WIDTH / 2)) + ', ' + getMainPinXY(mainPinElement.style.top, MAIN_PIN_HEIGHT);
   };
@@ -64,7 +61,6 @@
   addCoordsToInput();
 
   // Перетаскивание маркера
-
   var mouseDownOffset;
 
   var onMouseDown = function (evt) {
@@ -126,7 +122,6 @@
     addCoordsToInput: addCoordsToInput,
     resetMap: resetMap
   };
-
 })();
 
 

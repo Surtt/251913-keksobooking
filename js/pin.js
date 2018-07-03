@@ -2,6 +2,9 @@
 
 (function () {
 
+  var templateContent = document.querySelector('template').content;
+  var pinTemplate = templateContent.querySelector('.map__pin');
+
   function createPin(data, id) {
 
     var copy = pinTemplate.cloneNode(true);
@@ -12,9 +15,6 @@
     copy.setAttribute('data-id', id);
     return copy;
   }
-
-  var templateContent = document.querySelector('template').content;
-  var pinTemplate = templateContent.querySelector('.map__pin');
 
   window.pin = {
     createPin: createPin
