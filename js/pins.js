@@ -33,8 +33,8 @@
       var dataId = pinElement.getAttribute('data-id');
       var cardData = getDataById(dataId);
       window.card.showCard(cardData);
+      pinElement.classList.add(activeClass);
     }
-    pinElement.classList.add(activeClass);
   };
 
   var getDataById = function (id) {
