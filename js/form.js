@@ -97,16 +97,16 @@
 
     messageSuccess.classList.remove('hidden');
     messageSuccess.addEventListener('click', hideMessage);
-    document.body.addEventListener('keydown', hideMessage);
+    document.body.addEventListener('keydown', onKeyDown);
   };
 
   var hideMessage = function () {
     messageSuccess.classList.add('hidden');
     messageSuccess.removeEventListener('click', hideMessage);
-    document.body.removeEventListener('keydown', onKeyUp);
+    document.body.removeEventListener('keydown', onKeyDown);
   };
 
-  var onKeyUp = function (evt) {
+  var onKeyDown = function (evt) {
     if (evt.keyCode === window.constants.ESC_KEYCODE) {
       hideMessage();
     }

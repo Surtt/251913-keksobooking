@@ -30,11 +30,11 @@
   var onMapPinsContainerClick = function (e) {
     var pinElement = e.target;
     if (pinElement.hasAttribute('data-id')) {
-      pinElement.classList.add(activeClass);
       var dataId = pinElement.getAttribute('data-id');
       var cardData = getDataById(dataId);
       window.card.showCard(cardData);
     }
+    pinElement.classList.add(activeClass);
   };
 
   var getDataById = function (id) {
