@@ -196,6 +196,10 @@ fieldset {
   pointer-events: none;
 }
 
+.map__pin::after {
+  pointer-events: none;
+}
+
 .map__pin:not(.map__pin--main)::after {
   content: "";
   position: absolute;

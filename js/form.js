@@ -85,10 +85,62 @@
   form.addEventListener('submit', function (evt) {
     window.backend.save(new FormData(form), function () {
       form.reset();
-      window.map.addCoordsToInput();
-      setInputPrice();
+      resetForm();
+      resetFilterForm();
+      showSuccessMessage();
     });
     evt.preventDefault();
+  });
+
+  var messageSuccess = document.querySelector('.success');
+  var showSuccessMessage = function () {
+
+    messageSuccess.classList.remove('hidden');
+    messageSuccess.addEventListener('click', hideMessage);
+    document.body.addEventListener('keydown', onKeyDown);
+  };
+
+  var hideMessage = function () {
+    messageSuccess.classList.add('hidden');
+    messageSuccess.removeEventListener('click', hideMessage);
+    document.body.removeEventListener('keydown', onKeyDown);
+  };
+
+  var onKeyDown = function (evt) {
+    if (evt.keyCode === window.constants.ESC_KEYCODE) {
+      hideMessage();
+    }
+  };
+
+  // Сброс формы
+  var resetForm = function () {
+    getDisabledFields(true);
+    form.classList.add('ad-form--disabled');
+    document.querySelector('.map').classList.add('map--faded');
+    window.pins.deletePins();
+    window.map.resetMap();
+    window.map.addCoordsToInput();
+    window.card.closeCard();
+  };
+
+  var resetFilterForm = function () {
+    var mapFilters = document.querySelectorAll('.map__filter');
+    var mapCheckboxes = document.querySelectorAll('.map__checkbox');
+
+    for (var i = 0; i < mapFilters.length; i++) {
+      mapFilters[i].value = 'any';
+    }
+    for (var j = 0; j < mapCheckboxes.length; j++) {
+      mapCheckboxes[j].checked = false;
+    }
+  };
+
+  var formResetButton = document.querySelector('.ad-form__reset');
+  formResetButton.addEventListener('click', function (evt) {
+    evt.preventDefault();
+    form.reset();
+    resetForm();
+    resetFilterForm();
   });
 
   window.form = {
