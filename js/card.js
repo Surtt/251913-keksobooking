@@ -2,50 +2,48 @@
 
 (function () {
 
-  var template = document.querySelector('template');
-  var cardTemplate = template.content.querySelector('.map__card');
-  var mapFiltersContainer = document.querySelector('.map__filters-container');
+  var templateElement = document.querySelector('template');
+  var cardTemplateElement = templateElement.content.querySelector('.map__card');
+  var mapFiltersContainerElement = document.querySelector('.map__filters-container');
 
   // Закрытие карточки
   var closeCard = function () {
-    var mapCard = document.querySelector('.map__card');
-    if (mapCard) {
-      mapCard.parentNode.removeChild(mapCard);
+    var mapCardElement = document.querySelector('.map__card');
+    if (mapCardElement) {
+      mapCardElement.parentNode.removeChild(mapCardElement);
     }
     window.pins.deactivateCurrentPin();
 
-    document.removeEventListener('keydown', onPopupEscPress);
+    document.removeEventListener('keydown', onPopupPress);
+    document.removeEventListener('click', closeCard);
   };
 
-  var onPopupEscPress = function (evt) {
+  var onPopupPress = function (evt) {
+    if (evt.keyCode === window.constants.ENTER_KEYCODE) {
+      closeCard();
+    }
     if (evt.keyCode === window.constants.ESC_KEYCODE) {
       closeCard();
     }
   };
 
+
   var showCard = function (cardData) {
     closeCard();
-    var map = document.querySelector('section.map');
-    map.insertBefore(createCard(cardData), mapFiltersContainer);
+    var mapElement = document.querySelector('section.map');
+    mapElement.insertBefore(createCard(cardData), mapFiltersContainerElement);
 
-    var closeButton = document.querySelector('.popup__close');
+    var closeButtonElement = document.querySelector('.popup__close');
 
-    closeButton.addEventListener('click', closeCard);
-    closeButton.addEventListener('keydown', function (evt) {
-      if (evt.keyCode === window.constants.ENTER_KEYCODE) {
-        closeCard();
-      }
-      if (evt.keyCode === window.constants.ESC_KEYCODE) {
-        closeCard();
-      }
-    });
-    closeButton.removeEventListener('keydown', closeCard);
+    closeButtonElement.addEventListener('click', closeCard);
+    closeButtonElement.addEventListener('keydown', onPopupPress);
   };
+
 
   // Функция вывода карточки
   var createCard = function (card) {
 
-    var cardElement = cardTemplate.cloneNode(true);
+    var cardElement = cardTemplateElement.cloneNode(true);
 
     cardElement.querySelector('.popup__title').textContent = card.offer.title;
     cardElement.querySelector('.popup__text--address').textContent = card.offer.address;
@@ -70,7 +68,7 @@
   };
 
   window.card = {
-    showCard: showCard,
-    closeCard: closeCard
+    show: showCard,
+    close: closeCard
   };
 })();

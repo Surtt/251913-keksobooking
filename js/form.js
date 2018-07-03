@@ -10,24 +10,24 @@
     hundred: [3]
   };
 
-  var adFormElement = document.querySelectorAll('.ad-form fieldset');
-  var form = document.querySelector('.ad-form');
-  var selectType = document.querySelector('#type');
-  var inputPrice = document.querySelector('#price');
-  var selectTimein = document.querySelector('#timein');
-  var selectTimeout = document.querySelector('#timeout');
-  var selectRoomNumber = document.querySelector('#room_number');
-  var selectCapacity = document.querySelector('#capacity');
-  var messageSuccess = document.querySelector('.success');
-  var mapFilters = document.querySelectorAll('.map__filter');
-  var mapCheckboxes = document.querySelectorAll('.map__checkbox');
-  var formResetButton = document.querySelector('.ad-form__reset');
+  var fieldsetElements = document.querySelectorAll('.ad-form fieldset');
+  var adFormElement = document.querySelector('.ad-form');
+  var selectTypeElement = document.querySelector('#type');
+  var inputPriceElement = document.querySelector('#price');
+  var selectTimeinElement = document.querySelector('#timein');
+  var selectTimeoutElement = document.querySelector('#timeout');
+  var selectRoomNumberElements = document.querySelector('#room_number');
+  var selectCapacityElement = document.querySelector('#capacity');
+  var messageSuccessElement = document.querySelector('.success');
+  var mapFiltersElements = document.querySelectorAll('.map__filter');
+  var mapCheckboxesElements = document.querySelectorAll('.map__checkbox');
+  var adFormResetElement = document.querySelector('.ad-form__reset');
 
   // Все поля формы делаем неактивными
   var getDisabledFields = function (input) {
-    for (var i = 0; i < adFormElement.length; i++) {
-      adFormElement[i].disabled = input;
-    }
+    fieldsetElements.forEach(function (fieldsetElement) {
+      fieldsetElement.disabled = input;
+    });
   };
 
   getDisabledFields(true);
@@ -35,23 +35,23 @@
 
   // Активация страницы
   var enableForm = function () {
-    form.classList.remove('ad-form--disabled');
-    for (var i = 0; i < adFormElement.length; i++) {
-      adFormElement[i].removeAttribute('disabled');
-    }
+    adFormElement.classList.remove('ad-form--disabled');
+    fieldsetElements.forEach(function (fieldsetElement) {
+      fieldsetElement.removeAttribute('disabled');
+    });
   };
 
   // Ввод данных
   var setInputPrice = function () {
     for (var i = 0; i < MIN_PRICES.length; i++) {
-      if (selectType.selectedIndex === i) {
-        inputPrice.placeholder = MIN_PRICES[i];
-        inputPrice.min = MIN_PRICES[i];
+      if (selectTypeElement.selectedIndex === i) {
+        inputPriceElement.placeholder = MIN_PRICES[i];
+        inputPriceElement.min = MIN_PRICES[i];
       }
     }
   };
 
-  selectType.addEventListener('change', function () {
+  selectTypeElement.addEventListener('change', function () {
     setInputPrice();
   });
 
@@ -61,29 +61,29 @@
     }
   };
 
-  selectTimein.addEventListener('change', function () {
-    changeTime(selectTimein, selectTimeout);
+  selectTimeinElement.addEventListener('change', function () {
+    changeTime(selectTimeinElement, selectTimeoutElement);
   });
 
-  selectTimeout.addEventListener('change', function () {
-    changeTime(selectTimeout, selectTimein);
+  selectTimeoutElement.addEventListener('change', function () {
+    changeTime(selectTimeoutElement, selectTimeinElement);
   });
 
-  selectRoomNumber.addEventListener('change', function (evt) {
-    for (var i = 0; i < selectCapacity.length; i++) {
-      selectCapacity[i].disabled = true;
+  selectRoomNumberElements.addEventListener('change', function (evt) {
+    for (var i = 0; i < selectCapacityElement.length; i++) {
+      selectCapacityElement[i].disabled = true;
     }
     var selectRooms = evt.target.selectedIndex;
     var visitors = Object.values(ROOMS)[selectRooms];
     for (var j = 0; j < visitors.length; j++) {
-      selectCapacity[visitors[j]].disabled = false;
-      selectCapacity.selectedIndex = visitors[0];
+      selectCapacityElement[visitors[j]].disabled = false;
+      selectCapacityElement.selectedIndex = visitors[0];
     }
   });
 
-  form.addEventListener('submit', function (evt) {
-    window.backend.save(new FormData(form), function () {
-      form.reset();
+  adFormElement.addEventListener('submit', function (evt) {
+    window.backend.save(new FormData(adFormElement), function () {
+      adFormElement.reset();
       resetForm();
       resetFilterForm();
       showSuccessMessage();
@@ -93,14 +93,14 @@
 
 
   var showSuccessMessage = function () {
-    messageSuccess.classList.remove('hidden');
-    messageSuccess.addEventListener('click', hideMessage);
+    messageSuccessElement.classList.remove('hidden');
+    messageSuccessElement.addEventListener('click', hideMessage);
     document.body.addEventListener('keydown', onKeyDown);
   };
 
   var hideMessage = function () {
-    messageSuccess.classList.add('hidden');
-    messageSuccess.removeEventListener('click', hideMessage);
+    messageSuccessElement.classList.add('hidden');
+    messageSuccessElement.removeEventListener('click', hideMessage);
     document.body.removeEventListener('keydown', onKeyDown);
   };
 
@@ -113,31 +113,31 @@
   // Сброс формы
   var resetForm = function () {
     getDisabledFields(true);
-    form.classList.add('ad-form--disabled');
+    adFormElement.classList.add('ad-form--disabled');
     document.querySelector('.map').classList.add('map--faded');
-    window.pins.deletePins();
-    window.map.resetMap();
+    window.pins.delete();
+    window.map.reset();
     window.map.addCoordsToInput();
-    window.card.closeCard();
+    window.card.close();
   };
 
   var resetFilterForm = function () {
-    for (var i = 0; i < mapFilters.length; i++) {
-      mapFilters[i].value = 'any';
-    }
-    for (var j = 0; j < mapCheckboxes.length; j++) {
-      mapCheckboxes[j].checked = false;
-    }
+    mapFiltersElements.forEach(function (mapFiltersElement) {
+      mapFiltersElement.value = 'any';
+    });
+    mapCheckboxesElements.forEach(function (mapCheckboxesElement) {
+      mapCheckboxesElement.checked = false;
+    });
   };
 
-  formResetButton.addEventListener('click', function (evt) {
+  adFormResetElement.addEventListener('click', function (evt) {
     evt.preventDefault();
-    form.reset();
+    adFormElement.reset();
     resetForm();
     resetFilterForm();
   });
 
   window.form = {
-    enableForm: enableForm
+    enable: enableForm
   };
 })();

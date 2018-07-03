@@ -11,16 +11,13 @@
   var MAX_RIGHT_X = 1200;
 
 
-  var showMap = document.querySelector('.map');
-  showMap.classList.remove('map--faded');
+  var showMapElement = document.querySelector('.map');
 
-  // Возвращаем карту в исходное состояние, затемняем ее
-  document.querySelector('.map').classList.add('map--faded');
   var fragmentCards = document.createDocumentFragment();
   var mainPinElement = document.querySelector('.map__pin--main');
-  var inputAddress = document.querySelector('#address');
+  var inputAddressElement = document.querySelector('#address');
 
-  showMap.appendChild(fragmentCards);
+  showMapElement.appendChild(fragmentCards);
 
 
   // Определение координат mainPin
@@ -34,10 +31,10 @@
   var onMainPinClick = function () {
     var ads = window.data.getAds();
     if (ads) {
-      showMap.classList.remove('map--faded');
-      window.form.enableForm();
+      showMapElement.classList.remove('map--faded');
+      window.form.enable();
       if (!pinsCreated) {
-        window.pins.createPins(ads);
+        window.pins.create(ads);
         pinsCreated = true;
       }
     }
@@ -55,7 +52,7 @@
 
   // Добавление в инпут адреса формы
   var addCoordsToInput = function () {
-    inputAddress.value = Math.floor(getMainPinXY(mainPinElement.style.left, MAIN_PIN_WIDTH / 2)) + ', ' + getMainPinXY(mainPinElement.style.top, MAIN_PIN_HEIGHT);
+    inputAddressElement.value = Math.floor(getMainPinXY(mainPinElement.style.left, MAIN_PIN_WIDTH / 2)) + ', ' + getMainPinXY(mainPinElement.style.top, MAIN_PIN_HEIGHT);
   };
 
   addCoordsToInput();
@@ -120,7 +117,7 @@
 
   window.map = {
     addCoordsToInput: addCoordsToInput,
-    resetMap: resetMap
+    reset: resetMap
   };
 })();
 
