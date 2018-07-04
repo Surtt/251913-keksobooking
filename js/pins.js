@@ -19,12 +19,14 @@
 
   var createPins = function (ads) {
     var displayedPins = Math.min(ads.length, MAX_VISIBLE_PINS);
+    var fragment = document.createDocumentFragment();
     for (var i = 0; i < displayedPins; i++) {
       var data = ads[i];
       var pinElement = window.pin.create(data, data.author.avatar);
       mapPinsElements.push(pinElement);
-      mapPinsContainerElement.appendChild(pinElement);
+      fragment.appendChild(pinElement);
     }
+    mapPinsContainerElement.appendChild(fragment);
     mapPinsContainerElement.addEventListener('click', onMapPinsContainerClick);
   };
 

@@ -22,7 +22,7 @@
 
   // Определение координат mainPin
   var getMainPinXY = function (pos, gap) {
-    return parseInt(pos.split('px', 1), 10) + gap;
+    return parseInt(pos, 10) + gap;
   };
 
 

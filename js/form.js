@@ -16,7 +16,7 @@
   var inputPriceElement = document.querySelector('#price');
   var selectTimeinElement = document.querySelector('#timein');
   var selectTimeoutElement = document.querySelector('#timeout');
-  var selectRoomNumberElements = document.querySelector('#room_number');
+  var selectRoomNumberElement = document.querySelector('#room_number');
   var selectCapacityElement = document.querySelector('#capacity');
   var messageSuccessElement = document.querySelector('.success');
   var mapFiltersElements = document.querySelectorAll('.map__filter');
@@ -69,7 +69,7 @@
     changeTime(selectTimeoutElement, selectTimeinElement);
   });
 
-  selectRoomNumberElements.addEventListener('change', function (evt) {
+  selectRoomNumberElement.addEventListener('change', function (evt) {
     for (var i = 0; i < selectCapacityElement.length; i++) {
       selectCapacityElement[i].disabled = true;
     }
